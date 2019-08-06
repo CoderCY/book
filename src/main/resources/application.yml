@@ -1,0 +1,39 @@
+server:
+  port: 8080
+
+spring:
+  # 场景配置，生产，测试，开发
+  profiles:
+    active: dev
+
+  #数据库配置
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/test_db?useUnicode=true&characterEncoding=UTF-8&userSSL=false&serverTimezone=GMT%2B8
+    username: root
+    password: root
+    driver-class-name: com.mysql.jdbc.Driver
+
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+    cache: false
+
+#Redis配置
+  redis:
+    host: 127.0.0.1
+    #edis服务器IP
+    port: 6379
+    # Redis服务器连接端口
+    password: ffcs1234
+    # 连接密码（默认为空）
+    pool:
+      max-active: 12
+      # 连接池最大连接数
+      max-wait: -1
+      # 连接池最大阻塞
+      max-idle: 12
+      # 连接池中的最大空闲连接
+      min-idle: 2
+      # 连接池中的最小空闲连接
+    timeout: 0
+    # 连接超时时间

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>目录</title>
+    <!--UC强制全屏-->
+    <meta name="x5-fullscreen" content="true">
+    <meta content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0" name="viewport"/>
+    <meta content="yes" name="apple-mobile-web-app-capable"/>
+    <meta content="black" name="apple-mobile-web-app-status-bar-style"/>
+    <meta content="telephone=no" name="format-detection"/>
+    <link th:href="@{/book/css/style.css}" rel="stylesheet" type="text/css"/>
+    <script type="text/javascript" th:src="@{/book/js/jquery-1.10.2.min.js}"></script>
+    <script type="text/javascript" th:src="@{/book/js/tab.js}"></script>
+
+    <script>
+
+        var ctxPath='[[${#httpServletRequest.getContextPath()}]]';
+
+        //用于下一页
+        function initBooks() {
+            var param = {bookId: $("#bookId").val(),
+                px: $(".icon-sort").attr("type")
+            };
+            $.post(ctxPath + "/book/bookChapters",param, function (result) {
+                $("#chapters").empty();
+                for (var s in result) {
+                    var ahtml = $("#list_model>.b-line").clone();
+                    ahtml.attr("href", ctxPath + "/book/imgs/" + result[s].id);
+                    ahtml.find("h4.b-line").text(result[s].chapter);
+                    $("#chapters").append(ahtml);
+                }
+            }, "json");
+        }
+
+        $(function () {
+            $(".icon-sort").click(function () {
+                initBooks();
+            });
+        });
+
+    </script>
+</head>
+<body>
+<div id="list_model" style="display: none">
+    <a href="" type="" about="" class="aui-flex b-line">
+        <div class="aui-flex-box">
+            <h4 class="b-line"></h4>
+        </div>
+    </a>
+</div>
+<input type="hidden" id="bookId" th:value="${bookId}">
+
+<section class="aui-flexView" data-ydui-tab>
+    <header class="aui-navBar aui-navBar-fixed nav-back">
+        <img id="tab-aui-back" class="aui-back" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAE60lEQVRoQ+1ZTU7cShCutmaksTfABsntRfJOkOEEgRO85ASZnCDkBGFOEHKCkBOEnCBwggwnCCymLbEBNgMSg+uprG5U7rHd3R7Dk6J4Z/VfffX/I+AP+cQfggP+AqmT5NXV1eZisXgdRdEYEccAsGntuxZCzIqimCVJcrq1tXXdl0asLZE8z18i4r+IOBFCEPHeHyLOhBBHcRx/WxdUZyAEoCiKT0KIiUX5DQDMEPGkDpEQYhcACPAGX0fEoyiKpmmanntzgm0MBkLqc3d39wERD9g9F0TIcDg83t7envkQcnl5OV4ul8SENwDwgs4g4nUURYdpmk597uB7goDQ4/f391+ZCl0IIQ7SND0KfZjvz/N8ohljAM2iKHobIh1vIEqpN4hIIMiASX0OpJSH6wCwz87n8wMhxCcjneFwuOcrYS8gmmNf9QNnw+Fw4vtAKFCtcsekbqRqQoj3Ukr6b/2cQEgSAPDdgEiSZHddD+MiSrvxEyHEKwLjI5lWINomfpI6IeJZlmVB7tVFcNu6DSaKop02m2kEoi8iEBTczp5DEjYwouH29pa8IDmBEynlXhP4RiDM8G4Gg8HuU9mES2raZn7pfR+bHEwtEB2tf7sOu4joa90wlewlSZJ/6my0FohSiuLCOwC4kFK+DCWI2da0DxfNVQwRp1mW8WBckrcChEuDXF9osOMOAgC+SSntFCaUL+V+EwKapLICRCm1DwCfu0jD9nJ9OwilFGXLG3UMXgEyn89/aU9VK8ImdnIvR0yI43jcd7xhKv9DSknx7fGrANG6eEWrg8Fgx9dTWSCezMvleb6LiD+JPillhfbKD4viN1JKuyiqFcZzgTCPK6WwNG4h9tI0fSwVKkBY7DiVUlLd4PyUUpS+kJifTBKcCKUUEf8aACoxxZaIcbtfpJRk9K3ffD6nbLj0SjaHXGe7riulKIGkirRiwzaQEm2Tr+aPcxC6ulurJqG70zQ9dQFkWlNx7Z2AKKWoDvngerTD+oo3su9oUv9OQHh90oHYtiNOle4VCFHCfDrZR3AG0JUBDEgF9FrGzsEAwFufSq4rAOZ+3cbe0f2ai70quXWBmMzD1oKKRNoiZxMBXcrSrmDaMo/GFCUkLthgmmqGrgCYWpn+wUrmUZf9msjp9CCcMJ3+U1m6Qa3QJEn2/rekkQjjeX+WZVshXNRlKTGidzBcreocy4pE9AHqv9bm/S5gHIydD7nOtq0zR1RbtdaWuuzQeRzHO6Eqwlqg+324ZG2Dv3Vbyq/UJa5wqfjkXetw2ucs7yE0FWyN7SBW8j5bZlsHinc624Jua6fR5P663d/a6fPhbOgeq5HRmlC2ArFU7ElcahO40EaGs4ltu9TQuUWoFGi/JQmvytMJxFy8XC5NfKCpEg1hakdrXQjnZ+w5jG+71guIDUY/fBjH8TTUNTtyts+mdKbGecgcxhsIc8uU7VLx/zjzG41GX7oCMjPJoij29TSMrv4Rx/Ek5M4gIIabOuBRuVtOZsmrAQABPPaZn5t5PHVfrKnwBQB0CqKdgBjpLBYL4iJ1W+xRM83PaWxWsSNEpAbbZs08vhyqjkaj4xApcDXtDMQ2UACgthD1wiqgWoyfBqqlFPtIY3oBwokl1/nw8DAuiqIcRxjuU2qv/2eDweDctx3r6wV7B+L7cN/7/gLpm6Pr3vcf/LqFYDbQ+0MAAAAASUVORK5CYII=">
+        <div id="tab-aui-sort">
+            <i class="icon-sort icon-desc" type="desc"></i>
+        </div>
+    </header>
+    <section class="aui-scrollView">
+        <div class="tab-panel">
+            <div id="chapters" class="tab-panel-item tab-active">
+                <a th:each="chapter,chapterStat : ${chapters}" th:href="${#httpServletRequest.getContextPath() + '/book/imgs/'+chapter.id}" class="aui-flex b-line" >
+                    <div class="aui-flex-box">
+                        <h4 class="b-line" th:text="${chapter.chapter}"></h4>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+</section>
+</body>
+</html>

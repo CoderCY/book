@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>在线漫画屋</title>
+    <!--UC强制全屏-->
+    <meta name="x5-fullscreen" content="true">
+    <meta content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0" name="viewport"/>
+    <meta content="yes" name="apple-mobile-web-app-capable"/>
+    <meta content="black" name="apple-mobile-web-app-status-bar-style"/>
+    <meta content="telephone=no" name="format-detection"/>
+    <link th:href="@{/book/css/style.css}" rel="stylesheet" type="text/css"/>
+    <script type="text/javascript" th:src="@{/book/js/jquery-1.10.2.min.js}"></script>
+    <script type="text/javascript" th:src="@{/book/js/tab.js}"></script>
+
+    <script>
+
+        var ctxPath='[[${#httpServletRequest.getContextPath()}]]';
+
+        $(function () {
+            initBooks();
+        });
+
+        function initBooks() {
+            var param = {pageSize: 100,
+            type: "少年热血"}
+            $.post(ctxPath + "/book/bookList",param, function (result) {
+                for (var s in result) {
+                    var ahtml = $("#list_model>.b-line").clone();
+                    ahtml.attr("href","chapters/" + result[s].id);
+                    ahtml.find("h1").text(result[s].title);
+                    ahtml.find("h2").text(result[s].type);
+                    ahtml.find("h3").text(result[s].author);
+                    ahtml.find(".latestChapter").text(result[s].latestChapter);
+                    ahtml.find(".line-em").text(result[s].updateTime);
+                    ahtml.find("img").attr("src",result[s].imgUrl);
+                    $("#bookList").append(ahtml);
+                }
+            }, "json");
+            var param2 = {pageSize: 100,
+                type: "少女爱情"}
+            $.post(ctxPath + "/book/bookList",param2, function (result) {
+                for (var s in result) {
+                    var ahtml = $("#list_model>.b-line").clone();
+                    ahtml.attr("href","chapters/" + result[s].id);
+                    ahtml.find("h1").text(result[s].title);
+                    ahtml.find("h2").text(result[s].type);
+                    ahtml.find("h3").text(result[s].author);
+                    ahtml.find(".latestChapter").text(result[s].latestChapter);
+                    ahtml.find(".line-em").text(result[s].updateTime);
+                    ahtml.find("img").attr("src",result[s].imgUrl);
+                    $("#bookList_2").append(ahtml);
+                }
+            }, "json");
+        }
+    </script>
+</head>
+<body>
+<div id="list_model" style="display: none">
+    <a href="" type="" about="" class="aui-flex b-line">
+        <div class="aui-film-img">
+            <img src="" alt="">
+        </div>
+        <div class="aui-flex-box">
+            <h1></h1>
+            <h2></h2>
+            <h3></h3>
+            <span class="b-line">
+                <em>更新于</em>
+                <em class="line-em"></em>
+            </span>
+            <h4 class="b-line">
+                <em>最新章节</em>
+                <em class="latestChapter"></em>
+            </h4>
+        </div>
+        <!--<div class="aui-film-button">
+            <button>收藏</button>
+        </div>-->
+    </a>
+</div>
+<section class="aui-flexView" data-ydui-tab>
+    <header class="aui-navBar aui-navBar-fixed">
+        <ul class="tab-nav b-line">
+            <li class="tab-nav-item tab-active">
+                <a href="javascript:;">
+                    <span>少年热血</span>
+                </a>
+            </li>
+            <li class="tab-nav-item">
+                <a href="javascript:;">
+                    <span>少女爱情</span>
+                </a>
+            </li>
+        </ul>
+    </header>
+    <section class="aui-scrollView">
+        <div class="tab-panel">
+            <div id="bookList" class="tab-panel-item tab-active">
+
+            </div>
+            <div id="bookList_2" class="tab-panel-item">
+
+            </div>
+        </div>
+        <div style="height:55px;"></div>
+    </section>
+    <footer class="aui-footer aui-footer-fixed">
+        <a th:href="@{/book/home}" class="aui-tabBar-item ">
+                <span class="aui-tabBar-item-icon">
+                    <i class="icon icon-loan"></i>
+                </span>
+            <span class="aui-tabBar-item-text">首页</span>
+        </a>
+        <a href="javascript:;" class="aui-tabBar-item aui-tabBar-item-active">
+                <span class="aui-tabBar-item-icon">
+                    <i class="icon icon-credit_2"></i>
+                </span>
+            <span class="aui-tabBar-item-text">男女</span>
+        </a>
+        <a href="javascript:alert('未开通');" class="aui-tabBar-item ">
+                <span class="aui-tabBar-item-icon">
+                    <i class="icon icon-ions"></i>
+                </span>
+            <span class="aui-tabBar-item-text">书架</span>
+        </a>
+        <a href="javascript:alert('未开通');" class="aui-tabBar-item ">
+                <span class="aui-tabBar-item-icon">
+                    <i class="icon icon-mine"></i>
+                </span>
+            <span class="aui-tabBar-item-text">我的</span>
+        </a>
+    </footer>
+</section>
+</body>
+</html>
